@@ -49,6 +49,9 @@ go test -bench=. -benchmem ./benchmarks/
 # Run static analysis
 go vet ./...
 staticcheck ./...
+
+# Run golangci-lint (v2.x required - do NOT use v1.x)
+golangci-lint run ./...
 ```
 
 ### Code Generation

@@ -294,8 +294,10 @@ Explore complete examples in the [examples/](examples/) directory:
 ### Prerequisites
 
 - Go 1.23 or later
-- golangci-lint (for linting)
+- **golangci-lint v2.x** (for linting - **REQUIRED**, do NOT use v1.x)
 - make (optional)
+
+> **⚠️ Important**: This project requires golangci-lint v2.x. Version 1.x is NOT supported. See [SETUP.md](SETUP.md) for installation instructions.
 
 ### Building
 
