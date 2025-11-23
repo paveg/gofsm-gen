@@ -330,6 +330,7 @@ func TestParser(t *testing.T) {
 When implementing new features or fixing bugs:
 
 1. **Start with a failing test**
+
    ```bash
    # Write the test first
    vim pkg/parser/yaml_test.go
@@ -339,6 +340,7 @@ When implementing new features or fixing bugs:
    ```
 
 2. **Implement minimal code to pass**
+
    ```bash
    # Write just enough code to make the test pass
    vim pkg/parser/yaml.go
@@ -348,6 +350,7 @@ When implementing new features or fixing bugs:
    ```
 
 3. **Refactor while keeping tests green**
+
    ```bash
    # Improve the implementation
    # Run all tests to ensure nothing breaks
@@ -355,6 +358,7 @@ When implementing new features or fixing bugs:
    ```
 
 4. **Commit with test and implementation together**
+
    ```bash
    git add pkg/parser/yaml.go pkg/parser/yaml_test.go
    git commit -m "feat(parser): add guard condition parsing"
@@ -363,6 +367,7 @@ When implementing new features or fixing bugs:
 ### Avoiding Hardcoded Values
 
 **Bad**: Magic numbers and strings without context
+
 ```go
 // ❌ Avoid this
 func TestSomething(t *testing.T) {
@@ -372,6 +377,7 @@ func TestSomething(t *testing.T) {
 ```
 
 **Good**: Use constants or variables with meaningful names
+
 ```go
 // ✅ Do this
 func TestStateTransition_ValidTransition(t *testing.T) {
@@ -390,6 +396,7 @@ func TestStateTransition_ValidTransition(t *testing.T) {
 ```
 
 **Better**: Use table-driven tests with descriptive cases
+
 ```go
 // ✅ Even better: table-driven with meaningful scenarios
 func TestStateTransition(t *testing.T) {
