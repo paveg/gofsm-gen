@@ -1,6 +1,6 @@
 # golangci-lint v2 configuration
-# Documentation: https://golangci-lint.run/usage/configuration/
-version: 2
+# Documentation: https://golangci-lint.run/docs/configuration/
+version: "2"
 
 run:
   timeout: 5m
@@ -26,75 +26,77 @@ linters:
     - gosec
     - exhaustive
 
-linters-settings:
-  errcheck:
-    check-type-assertions: true
-    check-blank: true
+  settings:
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
 
-  govet:
-    enable-all: true
+    govet:
+      enable-all: true
 
-  goimports:
-    local-prefixes: github.com/paveg/gofsm-gen
+    goimports:
+      local-prefixes: github.com/paveg/gofsm-gen
 
-  exhaustive:
-    check:
-      - switch
-      - map
-    default-signifies-exhaustive: false
-    ignore-enum-members: ""
-    package-scope-only: false
+    exhaustive:
+      check:
+        - switch
+        - map
+      default-signifies-exhaustive: false
+      ignore-enum-members: ""
+      package-scope-only: false
 
-  revive:
-    rules:
-      - name: exported
-        severity: warning
-      - name: var-naming
-        severity: warning
-      - name: indent-error-flow
-        severity: warning
+    revive:
+      rules:
+        - name: exported
+          severity: warning
+        - name: var-naming
+          severity: warning
+        - name: indent-error-flow
+          severity: warning
 
-  gocritic:
-    enabled-checks:
-      - appendAssign
-      - assignOp
-      - boolExprSimplify
-      - captLocal
-      - commentFormatting
-      - commentedOutCode
-      - defaultCaseOrder
-      - dupArg
-      - dupBranchBody
-      - dupCase
-      - dupSubExpr
-      - elseif
-      - emptyFallthrough
-      - emptyStringTest
-      - equalFold
-      - flagDeref
-      - ifElseChain
-      - indexAlloc
-      - methodExprCall
-      - nilValReturn
-      - rangeExprCopy
-      - rangeValCopy
-      - regexpMust
-      - singleCaseSwitch
-      - sloppyLen
-      - stringXbytes
-      - switchTrue
-      - typeAssertChain
-      - typeSwitchVar
-      - underef
-      - unlambda
-      - unslice
-      - valSwap
-      - weakCond
-      - wrapperFunc
-      - yodaStyleExpr
+    gocritic:
+      enabled-checks:
+        - appendAssign
+        - assignOp
+        - boolExprSimplify
+        - captLocal
+        - commentFormatting
+        - commentedOutCode
+        - defaultCaseOrder
+        - dupArg
+        - dupBranchBody
+        - dupCase
+        - dupSubExpr
+        - elseif
+        - emptyFallthrough
+        - emptyStringTest
+        - equalFold
+        - flagDeref
+        - ifElseChain
+        - indexAlloc
+        - methodExprCall
+        - nilValReturn
+        - rangeExprCopy
+        - rangeValCopy
+        - regexpMust
+        - singleCaseSwitch
+        - sloppyLen
+        - stringXbytes
+        - switchTrue
+        - typeAssertChain
+        - typeSwitchVar
+        - underef
+        - unlambda
+        - unslice
+        - valSwap
+        - weakCond
+        - wrapperFunc
+        - yodaStyleExpr
 
 issues:
-  exclude-rules:
+  max-per-linter: 0
+  max-same-issues: 0
+  exclude:
     - path: _test\.go
       linters:
         - errcheck
@@ -102,6 +104,3 @@ issues:
     - path: cmd/
       linters:
         - gochecknoglobals
-
-  max-issues-per-linter: 0
-  max-same-issues: 0
