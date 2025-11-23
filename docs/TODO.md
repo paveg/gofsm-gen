@@ -7,23 +7,25 @@ vibe-kanbanを使用した開発タスク管理ボードです。
 **最終更新**: 2025-11-23
 
 ### 全体進捗
-- **Phase 1**: 🚧 進行中 (約40%完了)
+- **Phase 1**: 🚧 進行中 (約50%完了)
   - ✅ プロジェクト基盤: 完了
-  - ✅ 内部モデル実装: 完了
+  - ✅ 内部モデル実装: 完了（テストカバレッジ97.4%）
+  - ✅ ドキュメント: 完了
   - ⏳ パーサー/ジェネレーター: 未着手
+  - ⏳ CLI実装: 未着手
 - **Phase 2**: ⏸️ 未開始
 - **Phase 3**: ⏸️ 未開始
 - **Phase 4**: ⏸️ 未開始
 
 ### 次のステップ
-Phase 1の内部モデル実装が完了したため、以下のタスクが**ブロック解除**されました：
+Phase 1の内部モデル実装とドキュメント作成が完了したため、以下のタスクが**ブロック解除**されました：
 
-**すぐに着手可能なタスク**:
-1. 🎯 YAMLパーサーの実装 (pkg/parser/yaml.go)
-2. 🎯 コード生成器インターフェースの定義 (pkg/generator/generator.go)
-3. 🎯 Validator構造体の実装 (pkg/analyzer/validator.go)
-4. ⚡ state_machine.tmplテンプレートの作成
-5. ⚡ exhaustive統合の調査
+**すぐに着手可能なタスク** (優先度順):
+1. 🎯 **P0** YAMLパーサーの実装 (pkg/parser/yaml.go)
+2. 🎯 **P0** コード生成器インターフェースの定義 (pkg/generator/generator.go)
+3. 🎯 **P0** Validator構造体の実装 (pkg/analyzer/validator.go)
+4. ⚡ **P0** state_machine.tmplテンプレートの作成
+5. ⚡ **P1** exhaustive統合の調査と実装
 
 ---
 
@@ -59,67 +61,93 @@ Phase 1の内部モデル実装が完了したため、以下のタスクが**�
 
 **ドキュメント作成** (他の実装と並行可能)
 - [x] ⚡⏱️ READMEの作成
-- [x] ⚡⏱️ インストールガイドの作成 (SETUP.md)
-- [ ] ⚡ 基本的な使い方ガイド
-- [ ] ⚡ YAML定義リファレンス
-- [ ] ⚡ API仕様書
-- [ ] ⚡⏱️ コントリビューションガイド
+- [x] ⚡⏱️ インストールガイドの作成 (docs/installation.md)
+- [x] ⚡ 基本的な使い方ガイド (docs/usage.md)
+- [x] ⚡ YAML定義リファレンス (docs/yaml-reference.md)
+- [x] ⚡ API仕様書 (docs/api.md)
+- [x] ⚡⏱️ exhaustive統合の調査 (docs/exhaustive-integration-investigation.md)
+- [ ] ⚡⏱️ コントリビューションガイド (CONTRIBUTING.md)
 
 **テンプレート作成** (Generator実装と並行可能)
 - [ ] ⚡ state_machine.tmplテンプレートの作成
-
-**静的解析基盤** (調査フェーズは並行可能)
-- [ ] ⚡ exhaustive統合の調査
+- [ ] ⚡ test.tmplテンプレートの作成
+- [ ] ⚡ mock.tmplテンプレートの作成
 
 #### 🔒 依存関係ありタスク
 
-**パーサー実装**
-- [ ] 🔒 YAMLパーサーの実装 (pkg/parser/yaml.go)
-  - Blocked by: 内部モデル実装
+**パーサー実装** ✅ ブロック解除済み
+- [ ] 🎯 YAMLパーサーの実装 (pkg/parser/yaml.go)
+  - **優先度**: P0 (Critical)
+  - **推定工数**: 4-6時間
+  - **開発方針**: TDD（テストファースト）
+  - **参考**: docs/yaml-reference.md に仕様あり
 - [ ] 🔒 YAML定義構造体の作成
-  - Blocked by: 内部モデル実装
+  - Blocked by: YAMLパーサー構造設計
 - [ ] 🔒 YAMLパーサーのユニットテスト作成
-  - Blocked by: YAMLパーサーの実装
+  - Blocked by: YAMLパーサーの実装（TDDで同時進行）
 - [ ] 🔒 パーサーエラーハンドリングの実装
   - Blocked by: YAMLパーサーの実装
 
-**基本コード生成器**
-- [ ] 🔒 コード生成器インターフェースの定義 (pkg/generator/generator.go)
-  - Blocked by: 内部モデル実装
+**基本コード生成器** ✅ ブロック解除済み
+- [ ] 🎯 コード生成器インターフェースの定義 (pkg/generator/generator.go)
+  - **優先度**: P0 (Critical)
+  - **推定工数**: 2-3時間
+  - **開発方針**: インターフェース定義 + TDD
+  - **参考**: docs/api.md に設計あり
 - [ ] 🔒 基本コード生成器の実装 (pkg/generator/code_generator.go)
-  - Blocked by: コード生成器インターフェース, テンプレート
+  - Blocked by: コード生成器インターフェース, state_machine.tmplテンプレート
+  - **推定工数**: 6-8時間
 - [ ] 🔒 テンプレートデータ準備ロジックの実装
-  - Blocked by: 内部モデル実装
+  - Blocked by: コード生成器インターフェース
+  - **推定工数**: 3-4時間
 - [ ] 🔒 gofmtによるフォーマット処理の実装
   - Blocked by: 基本コード生成器の実装
+  - **推定工数**: 1-2時間
 - [ ] 🔒 生成コードのユニットテスト
-  - Blocked by: 基本コード生成器の実装
+  - Blocked by: 基本コード生成器の実装（TDDで同時進行）
+  - **方針**: Golden fileテスト使用
 
-**静的解析基盤**
-- [ ] 🔒 網羅性チェッカーの実装 (pkg/analyzer/exhaustive.go)
-  - Blocked by: exhaustive統合の調査
+**静的解析基盤** ✅ 部分的にブロック解除
+- [ ] 🎯 網羅性チェッカーの実装 (pkg/analyzer/exhaustive.go)
+  - **優先度**: P1 (High)
+  - **推定工数**: 4-5時間
+  - **参考**: docs/exhaustive-integration-investigation.md に調査結果あり
+  - **方針**: exhaustiveツールとの統合実装
 - [ ] 🔒 exhaustiveアノテーション自動挿入機能
   - Blocked by: 基本コード生成器の実装
+  - **推定工数**: 2-3時間
 - [ ] 🔒 静的解析のテスト作成
   - Blocked by: 網羅性チェッカーの実装
+  - **推定工数**: 3-4時間
 
-**モデル検証器**
-- [ ] 🔒 Validator構造体の実装 (pkg/analyzer/validator.go)
-  - Blocked by: 内部モデル実装
+**モデル検証器** ✅ ブロック解除済み
+- [ ] 🎯 Validator構造体の実装 (pkg/analyzer/validator.go)
+  - **優先度**: P0 (Critical)
+  - **推定工数**: 3-4時間
+  - **開発方針**: TDD
+  - **依存**: pkg/model（完了済み）
 - [ ] 🔒 状態の検証ロジック
   - Blocked by: Validator構造体の実装
+  - **推定工数**: 2時間
 - [ ] 🔒 イベントの検証ロジック
   - Blocked by: Validator構造体の実装
+  - **推定工数**: 2時間
 - [ ] 🔒 遷移の検証ロジック
   - Blocked by: Validator構造体の実装
+  - **推定工数**: 2-3時間
 - [ ] 🔒 到達可能性の検証 (reachability analysis)
-  - Blocked by: Validator構造体の実装, StateGraph実装
+  - Blocked by: Validator構造体の実装
+  - **依存**: StateGraph実装（完了済み）
+  - **推定工数**: 3-4時間
 - [ ] 🔒 決定性の検証 (determinism check)
   - Blocked by: Validator構造体の実装
+  - **推定工数**: 2-3時間
 - [ ] 🔒 重複遷移チェック
   - Blocked by: Validator構造体の実装
+  - **推定工数**: 1-2時間
 - [ ] 🔒 検証エラーレポート機能
   - Blocked by: Validator構造体の実装
+  - **推定工数**: 2時間
 
 **CLI実装**
 - [ ] 🔒 CLIエントリポイントの実装 (cmd/gofsm-gen/main.go)
@@ -353,27 +381,38 @@ Phase 1の内部モデル実装が完了したため、以下のタスクが**�
 
 #### 並列実行可能タスク - 完了 ✓
 - [x] READMEの作成
-- [x] インストールガイドの作成 (SETUP.md)
+- [x] インストールガイドの作成 (docs/installation.md)
+- [x] 基本的な使い方ガイド (docs/usage.md)
+- [x] YAML定義リファレンス (docs/yaml-reference.md)
+- [x] API仕様書 (docs/api.md)
+- [x] exhaustive統合の調査 (docs/exhaustive-integration-investigation.md)
 - [x] Makefileの作成（ビルド自動化）
 - [x] golangci-lintの設定 (.golangci.yml)
 - [x] MITライセンスの追加 (LICENSE)
 
 ## 📊 マイルストーン
 
-### M1: Phase 1 完了 (基本機能) - 🚧 進行中 (約40%完了)
+### M1: Phase 1 完了 (基本機能) - 🚧 進行中 (約50%完了)
 **完了済み**:
-- ✅ プロジェクト基盤構築（構造、go.mod、CI/CD、ドキュメント）
-- ✅ 内部モデル実装（FSM, State, Event, Transition, Graph）
+- ✅ プロジェクト基盤構築（構造、go.mod、CI/CD、Makefile、golangci-lint）
+- ✅ 内部モデル実装（FSM, State, Event, Transition, Graph）- テストカバレッジ97.4%
+- ✅ ドキュメント作成（README, installation.md, usage.md, yaml-reference.md, api.md, exhaustive調査）
 
-**残作業**:
-- ⏳ YAMLパーサーの実装
-- ⏳ 基本コード生成器の実装
-- ⏳ 静的解析基盤（exhaustive統合）
-- ⏳ モデル検証器の実装
-- ⏳ CLI実装
-- ⏳ サンプルコード作成
+**残作業** (クリティカルパス):
+- ⏳ YAMLパーサーの実装 (pkg/parser/)
+- ⏳ 基本コード生成器の実装 (pkg/generator/)
+- ⏳ テンプレート作成 (templates/)
+- ⏳ モデル検証器の実装 (pkg/analyzer/validator.go)
+- ⏳ 静的解析基盤の実装 (pkg/analyzer/exhaustive.go)
+- ⏳ CLI実装 (cmd/gofsm-gen/)
+- ⏳ サンプルコード作成 (examples/)
 
 **目標日**: TBD
+
+**推奨される次のアクション**:
+1. YAMLパーサーの実装（TDD方式で進める）
+2. コード生成器インターフェースの定義
+3. state_machine.tmplテンプレートの作成
 
 ### M2: Phase 2 完了 (高度な機能)
 - ガード/アクション機能の完全実装
@@ -405,20 +444,106 @@ Phase 1の内部モデル実装が完了したため、以下のタスクが**�
 ## 📝 メモ
 
 ### 技術的な決定事項
-- Go 1.18+ をサポート
-- `text/template` を使用したコード生成
-- `gopkg.in/yaml.v3` をYAMLパーサーに使用
-- `golang.org/x/tools/go/analysis` を静的解析に使用
-- `exhaustive` ツールとの統合
+- **Go Version**: Go 1.18+ をサポート（ジェネリクスを活用）
+- **コード生成**: `text/template` を使用
+- **YAMLパース**: `gopkg.in/yaml.v3`
+- **静的解析**: `golang.org/x/tools/go/analysis` + `exhaustive` ツール統合
+- **テスト戦略**: TDD (Test-Driven Development) を厳格に適用
+- **コードスタイル**: golangci-lint による品質管理
+
+### 開発方針
+1. **TDD優先**: 全ての新機能は「テストファースト」で実装
+2. **高品質テスト**: 意味のあるテストのみ作成（マジックナンバー禁止）
+3. **テーブル駆動テスト**: 複数のシナリオを網羅的にテスト
+4. **カバレッジ目標**: > 90%（現在pkg/modelは97.4%達成）
+5. **ドキュメント駆動**: 実装前にドキュメントで仕様を明確化
 
 ### リスクと課題
 - Go言語の制約による機能制限の可能性
 - パフォーマンス目標（<50ns/transition）の達成
 - 既存ライブラリとの差別化の明確化
 - コミュニティの採用促進
+- exhaustiveツールの適切な統合とCI/CDでの実行
 
 ### 成功指標
-- GitHub Stars: 1年で1000+
-- 採用プロジェクト数: 100+
-- テストカバレッジ: > 90%
-- パフォーマンス: 既存ライブラリと同等以上
+- **GitHub Stars**: 1年で1000+
+- **採用プロジェクト数**: 100+
+- **テストカバレッジ**: > 90% (現在: 97.4% for pkg/model ✅)
+- **パフォーマンス**: < 50ns/transition
+- **ビルド時間**: < 1秒 for 1000 states
+- **ドキュメント品質**: 全APIの完全なgodocカバレッジ
+
+### 最近の成果 (2025-11-23)
+- ✅ 内部モデル実装完了（97.4%カバレッジ）
+- ✅ 包括的なドキュメント作成完了
+- ✅ CI/CD パイプライン構築完了
+- ✅ exhaustive統合調査完了
+- ✅ プロジェクト基盤の確立
+
+## 🚀 Phase 1 実装戦略
+
+### 推奨される実装順序
+
+**Week 1-2: パーサーとバリデーター基盤**
+1. YAMLパーサーの実装（TDD）→ 4-6時間
+2. Validator構造体の実装 → 3-4時間
+3. 基本的な検証ロジック（状態、イベント、遷移）→ 6時間
+4. 到達可能性・決定性検証 → 5-7時間
+
+**Week 3-4: コード生成基盤**
+1. state_machine.tmplテンプレート作成 → 4-6時間
+2. コード生成器インターフェース定義 → 2-3時間
+3. 基本コード生成器実装 → 6-8時間
+4. Golden fileテスト作成 → 3-4時間
+
+**Week 5: CLI実装とサンプル**
+1. CLIエントリポイント実装 → 3-4時間
+2. コマンドライン引数パース → 2-3時間
+3. サンプルコード作成（ドアロック、注文管理）→ 4-5時間
+4. End-to-endテスト → 3-4時間
+
+**Week 6: 静的解析とポリッシュ**
+1. exhaustive統合実装 → 4-5時間
+2. アノテーション自動挿入 → 2-3時間
+3. ドキュメント最終調整 → 2-3時間
+4. パフォーマンステスト → 2-3時間
+
+**合計推定工数**: 約60-80時間（1.5-2ヶ月、週20時間ペース）
+
+### 並列作業の機会
+
+以下のタスクは依存関係が少なく、並列実行可能：
+- テンプレート作成（templates/*.tmpl）
+- コントリビューションガイド作成
+- ベンチマーク基盤の準備
+- Phase 2の設計ドキュメント作成
+
+### クリティカルパス
+
+```
+内部モデル ✅
+    ↓
+YAMLパーサー + Validator (並列可能)
+    ↓
+テンプレート + コード生成器インターフェース
+    ↓
+基本コード生成器
+    ↓
+CLI実装
+    ↓
+サンプルコード + E2Eテスト
+    ↓
+Phase 1 完了 🎉
+```
+
+### 品質チェックリスト
+
+Phase 1完了前に確認すべき項目：
+- [ ] 全パッケージのテストカバレッジ > 90%
+- [ ] golangci-lint クリーン
+- [ ] CI/CD グリーン（全テストパス）
+- [ ] サンプルコードが動作
+- [ ] ドキュメント完全性チェック
+- [ ] パフォーマンステスト実施
+- [ ] README.mdのクイックスタートが動作
+- [ ] 生成コードがexhaustiveチェック通過
