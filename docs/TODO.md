@@ -2,180 +2,303 @@
 
 vibe-kanbanを使用した開発タスク管理ボードです。
 
+## 凡例
+
+- 🔒 **Blocked by**: このタスクは他のタスクに依存しています
+- ⚡ **Parallel OK**: 他のタスクと並列実行可能
+- 🎯 **Blocker**: 他のタスクがこのタスクに依存しています
+- ⏱️ **Quick Win**: 短時間で完了可能なタスク
+
+---
+
 ## 📋 Backlog
 
 ### Phase 1: 基本機能実装
 
-#### プロジェクトセットアップ
-- [ ] プロジェクト構造の初期化
-- [ ] go.modファイルの作成
-- [ ] CI/CDパイプラインの構築
-- [ ] 開発環境のセットアップガイド作成
+#### 🎯 ブロッキングタスク（他のタスクの前提条件）
 
-#### パーサー実装
-- [ ] YAMLパーサーの実装 (pkg/parser/yaml.go)
-- [ ] YAML定義構造体の作成
-- [ ] YAMLパーサーのユニットテスト作成
-- [ ] パーサーエラーハンドリングの実装
+**プロジェクトセットアップ**
+- [ ] 🎯 プロジェクト構造の初期化
+- [ ] 🎯 go.modファイルの作成
+- [ ] ⚡ CI/CDパイプラインの構築
+- [ ] ⚡ 開発環境のセットアップガイド作成
 
-#### 内部モデル実装
-- [ ] FSMModel構造体の実装 (pkg/model/fsm.go)
-- [ ] State構造体の実装 (pkg/model/state.go)
-- [ ] Event構造体の実装 (pkg/model/event.go)
-- [ ] Transition構造体の実装 (pkg/model/transition.go)
-- [ ] StateGraph構造体の実装 (pkg/model/graph.go)
+**内部モデル実装** (基盤となるデータ構造)
+- [ ] 🎯 FSMModel構造体の実装 (pkg/model/fsm.go)
+- [ ] 🎯 State構造体の実装 (pkg/model/state.go)
+- [ ] 🎯 Event構造体の実装 (pkg/model/event.go)
+- [ ] 🎯 Transition構造体の実装 (pkg/model/transition.go)
+- [ ] ⚡ StateGraph構造体の実装 (pkg/model/graph.go)
 
-#### 基本コード生成器
-- [ ] コード生成器インターフェースの定義 (pkg/generator/generator.go)
-- [ ] 基本コード生成器の実装 (pkg/generator/code_generator.go)
-- [ ] state_machine.tmplテンプレートの作成
-- [ ] テンプレートデータ準備ロジックの実装
-- [ ] gofmtによるフォーマット処理の実装
-- [ ] 生成コードのユニットテスト
+#### ⚡ 並列実行可能タスク（依存関係が少ない）
 
-#### 静的解析基盤
-- [ ] exhaustive統合の調査
-- [ ] 網羅性チェッカーの実装 (pkg/analyzer/exhaustive.go)
-- [ ] exhaustiveアノテーション自動挿入機能
-- [ ] 静的解析のテスト作成
+**ドキュメント作成** (他の実装と並行可能)
+- [ ] ⚡⏱️ READMEの作成
+- [ ] ⚡⏱️ インストールガイドの作成
+- [ ] ⚡ 基本的な使い方ガイド
+- [ ] ⚡ YAML定義リファレンス
+- [ ] ⚡ API仕様書
+- [ ] ⚡⏱️ コントリビューションガイド
 
-#### モデル検証器
-- [ ] Validator構造体の実装 (pkg/analyzer/validator.go)
-- [ ] 状態の検証ロジック
-- [ ] イベントの検証ロジック
-- [ ] 遷移の検証ロジック
-- [ ] 到達可能性の検証 (reachability analysis)
-- [ ] 決定性の検証 (determinism check)
-- [ ] 重複遷移チェック
-- [ ] 検証エラーレポート機能
+**テンプレート作成** (Generator実装と並行可能)
+- [ ] ⚡ state_machine.tmplテンプレートの作成
 
-#### CLI実装
-- [ ] CLIエントリポイントの実装 (cmd/gofsm-gen/main.go)
-- [ ] コマンドライン引数のパース
-- [ ] ヘルプメッセージの実装
-- [ ] エラーメッセージの実装
-- [ ] 詳細出力モード (-v flag)
+**静的解析基盤** (調査フェーズは並行可能)
+- [ ] ⚡ exhaustive統合の調査
 
-#### ドキュメント作成
-- [ ] READMEの作成
-- [ ] インストールガイドの作成
-- [ ] 基本的な使い方ガイド
-- [ ] YAML定義リファレンス
-- [ ] API仕様書
-- [ ] コントリビューションガイド
+#### 🔒 依存関係ありタスク
 
-#### サンプルコード
-- [ ] シンプルなドアロック状態機械のサンプル
-- [ ] Order管理状態機械のサンプル
-- [ ] examples/ディレクトリの構築
+**パーサー実装**
+- [ ] 🔒 YAMLパーサーの実装 (pkg/parser/yaml.go)
+  - Blocked by: 内部モデル実装
+- [ ] 🔒 YAML定義構造体の作成
+  - Blocked by: 内部モデル実装
+- [ ] 🔒 YAMLパーサーのユニットテスト作成
+  - Blocked by: YAMLパーサーの実装
+- [ ] 🔒 パーサーエラーハンドリングの実装
+  - Blocked by: YAMLパーサーの実装
+
+**基本コード生成器**
+- [ ] 🔒 コード生成器インターフェースの定義 (pkg/generator/generator.go)
+  - Blocked by: 内部モデル実装
+- [ ] 🔒 基本コード生成器の実装 (pkg/generator/code_generator.go)
+  - Blocked by: コード生成器インターフェース, テンプレート
+- [ ] 🔒 テンプレートデータ準備ロジックの実装
+  - Blocked by: 内部モデル実装
+- [ ] 🔒 gofmtによるフォーマット処理の実装
+  - Blocked by: 基本コード生成器の実装
+- [ ] 🔒 生成コードのユニットテスト
+  - Blocked by: 基本コード生成器の実装
+
+**静的解析基盤**
+- [ ] 🔒 網羅性チェッカーの実装 (pkg/analyzer/exhaustive.go)
+  - Blocked by: exhaustive統合の調査
+- [ ] 🔒 exhaustiveアノテーション自動挿入機能
+  - Blocked by: 基本コード生成器の実装
+- [ ] 🔒 静的解析のテスト作成
+  - Blocked by: 網羅性チェッカーの実装
+
+**モデル検証器**
+- [ ] 🔒 Validator構造体の実装 (pkg/analyzer/validator.go)
+  - Blocked by: 内部モデル実装
+- [ ] 🔒 状態の検証ロジック
+  - Blocked by: Validator構造体の実装
+- [ ] 🔒 イベントの検証ロジック
+  - Blocked by: Validator構造体の実装
+- [ ] 🔒 遷移の検証ロジック
+  - Blocked by: Validator構造体の実装
+- [ ] 🔒 到達可能性の検証 (reachability analysis)
+  - Blocked by: Validator構造体の実装, StateGraph実装
+- [ ] 🔒 決定性の検証 (determinism check)
+  - Blocked by: Validator構造体の実装
+- [ ] 🔒 重複遷移チェック
+  - Blocked by: Validator構造体の実装
+- [ ] 🔒 検証エラーレポート機能
+  - Blocked by: Validator構造体の実装
+
+**CLI実装**
+- [ ] 🔒 CLIエントリポイントの実装 (cmd/gofsm-gen/main.go)
+  - Blocked by: パーサー実装, コード生成器実装
+- [ ] 🔒 コマンドライン引数のパース
+  - Blocked by: CLIエントリポイント
+- [ ] 🔒 ヘルプメッセージの実装
+  - Blocked by: CLIエントリポイント
+- [ ] 🔒 エラーメッセージの実装
+  - Blocked by: CLIエントリポイント
+- [ ] 🔒 詳細出力モード (-v flag)
+  - Blocked by: CLIエントリポイント
+
+**サンプルコード**
+- [ ] 🔒 シンプルなドアロック状態機械のサンプル
+  - Blocked by: CLI実装完了
+- [ ] 🔒 Order管理状態機械のサンプル
+  - Blocked by: CLI実装完了
+- [ ] 🔒 examples/ディレクトリの構築
+  - Blocked by: CLI実装完了
 
 ### Phase 2: 高度な機能実装
 
-#### ガード/アクション機能
-- [ ] Guard構造体の実装
-- [ ] Action構造体の実装
-- [ ] ガード条件評価ロジック
-- [ ] アクション実行ロジック
-- [ ] エントリー/イグジットアクションの実装
-- [ ] 非同期アクションのサポート
-- [ ] ガード/アクションのテスト
+#### 🎯 ブロッキングタスク
 
-#### Go DSLサポート
-- [ ] Go ASTパーサーの実装 (pkg/parser/ast.go)
-- [ ] DSLパーサーの実装 (pkg/parser/dsl.go)
-- [ ] DSL用APIの設計
-- [ ] Fluent API実装
-- [ ] DSLのサンプルコード作成
-- [ ] DSLパーサーのテスト
+**ガード/アクション機能** (Phase 1完了が前提)
+- [ ] 🎯 Guard構造体の実装
+  - Blocked by: Phase 1 内部モデル実装
+- [ ] 🎯 Action構造体の実装
+  - Blocked by: Phase 1 内部モデル実装
+- [ ] 🔒 ガード条件評価ロジック
+  - Blocked by: Guard構造体, 基本コード生成器
+- [ ] 🔒 アクション実行ロジック
+  - Blocked by: Action構造体, 基本コード生成器
+- [ ] 🔒 エントリー/イグジットアクションの実装
+  - Blocked by: Action構造体
+- [ ] 🔒 非同期アクションのサポート
+  - Blocked by: アクション実行ロジック
+- [ ] 🔒 ガード/アクションのテスト
+  - Blocked by: ガード/アクション実装
 
-#### テストコード自動生成
-- [ ] テストジェネレーターの実装 (pkg/generator/test_generator.go)
-- [ ] test.tmplテンプレートの作成
-- [ ] 状態遷移テストの自動生成
-- [ ] ガード条件テストの自動生成
-- [ ] エッジケーステストの自動生成
-- [ ] 生成されたテストコードの検証
+**Go DSLサポート**
+- [ ] 🎯 Go ASTパーサーの実装 (pkg/parser/ast.go)
+  - Blocked by: Phase 1 内部モデル実装
+- [ ] 🔒 DSLパーサーの実装 (pkg/parser/dsl.go)
+  - Blocked by: Go ASTパーサー
+- [ ] 🔒 DSL用APIの設計
+  - Blocked by: 内部モデル実装
+- [ ] 🔒 Fluent API実装
+  - Blocked by: DSL用API設計
+- [ ] 🔒 DSLのサンプルコード作成
+  - Blocked by: Fluent API実装
+- [ ] 🔒 DSLパーサーのテスト
+  - Blocked by: DSLパーサー実装
 
-#### モック自動生成
-- [ ] モックジェネレーターの実装 (pkg/generator/mock_generator.go)
-- [ ] mock.tmplテンプレートの作成
-- [ ] Guard/Actionモックの生成
-- [ ] モックの使用例ドキュメント
+#### ⚡ 並列実行可能タスク
 
-#### 視覚化機能
-- [ ] Mermaid生成器の実装 (pkg/visualizer/mermaid.go)
-- [ ] Graphviz生成器の実装 (pkg/visualizer/graphviz.go)
-- [ ] 状態遷移図の自動生成
-- [ ] 視覚化オプションの実装
+**視覚化機能** (基本モデルがあれば独立実装可能)
+- [ ] ⚡ Mermaid生成器の実装 (pkg/visualizer/mermaid.go)
+  - Blocked by: Phase 1 内部モデル実装のみ
+- [ ] ⚡ Graphviz生成器の実装 (pkg/visualizer/graphviz.go)
+  - Blocked by: Phase 1 内部モデル実装のみ
+- [ ] 🔒 状態遷移図の自動生成
+  - Blocked by: Mermaid/Graphviz実装
+- [ ] 🔒 視覚化オプションの実装
+  - Blocked by: CLI実装
 
-#### ランタイムサポート
-- [ ] Loggerインターフェースの実装 (pkg/runtime/logger.go)
-- [ ] TransitionLoggerの実装
-- [ ] RuntimeValidatorの実装 (pkg/runtime/validator.go)
-- [ ] 実行時統計収集機能
-- [ ] ガード競合検出ロジック
+**ランタイムサポート** (独立実装可能)
+- [ ] ⚡ Loggerインターフェースの実装 (pkg/runtime/logger.go)
+- [ ] ⚡ TransitionLoggerの実装
+  - Blocked by: Loggerインターフェース
+- [ ] ⚡ RuntimeValidatorの実装 (pkg/runtime/validator.go)
+- [ ] ⚡ 実行時統計収集機能
+  - Blocked by: RuntimeValidator
+- [ ] ⚡ ガード競合検出ロジック
+  - Blocked by: RuntimeValidator
 
-#### パフォーマンス最適化
-- [ ] ゼロアロケーションモードの実装
-- [ ] パフォーマンスベンチマークの作成 (benchmarks/)
-- [ ] 状態遷移のベンチマーク
-- [ ] ガード付き遷移のベンチマーク
-- [ ] メモリプロファイリング
-- [ ] パフォーマンス目標の達成確認 (<50ns/transition)
+#### 🔒 依存関係ありタスク
+
+**テストコード自動生成**
+- [ ] 🔒 テストジェネレーターの実装 (pkg/generator/test_generator.go)
+  - Blocked by: Phase 1 基本コード生成器
+- [ ] 🔒 test.tmplテンプレートの作成
+  - Blocked by: Phase 1 テンプレート基盤
+- [ ] 🔒 状態遷移テストの自動生成
+  - Blocked by: テストジェネレーター
+- [ ] 🔒 ガード条件テストの自動生成
+  - Blocked by: ガード機能実装
+- [ ] 🔒 エッジケーステストの自動生成
+  - Blocked by: テストジェネレーター
+- [ ] 🔒 生成されたテストコードの検証
+  - Blocked by: テスト自動生成完了
+
+**モック自動生成**
+- [ ] 🔒 モックジェネレーターの実装 (pkg/generator/mock_generator.go)
+  - Blocked by: Phase 1 基本コード生成器
+- [ ] 🔒 mock.tmplテンプレートの作成
+  - Blocked by: Phase 1 テンプレート基盤
+- [ ] 🔒 Guard/Actionモックの生成
+  - Blocked by: ガード/アクション機能
+- [ ] 🔒 モックの使用例ドキュメント
+  - Blocked by: モック生成完了
+
+**パフォーマンス最適化**
+- [ ] 🔒 ゼロアロケーションモードの実装
+  - Blocked by: Phase 1 基本コード生成器
+- [ ] ⚡ パフォーマンスベンチマークの作成 (benchmarks/)
+- [ ] 🔒 状態遷移のベンチマーク
+  - Blocked by: Phase 1 CLI完成
+- [ ] 🔒 ガード付き遷移のベンチマーク
+  - Blocked by: ガード機能実装
+- [ ] 🔒 メモリプロファイリング
+  - Blocked by: ベンチマーク作成
+- [ ] 🔒 パフォーマンス目標の達成確認 (<50ns/transition)
+  - Blocked by: 全ベンチマーク完了
 
 ### Phase 3: ツール統合
 
-#### VSCode拡張機能
-- [ ] VSCode拡張のプロジェクトセットアップ
-- [ ] YAML定義のシンタックスハイライト
-- [ ] 定義ファイルの自動補完
-- [ ] リアルタイムバリデーション
-- [ ] 状態遷移図のプレビュー機能
-- [ ] コード生成のショートカット
-- [ ] 拡張機能のテスト
-- [ ] VSCode Marketplaceへの公開
+#### 🎯 ブロッキングタスク
 
-#### gopls統合
-- [ ] LSP統合の調査
-- [ ] 型情報の提供
-- [ ] 定義へのジャンプ機能
-- [ ] リファクタリングサポート
+**VSCode拡張機能**
+- [ ] 🎯 VSCode拡張のプロジェクトセットアップ
+- [ ] ⚡ YAML定義のシンタックスハイライト
+  - Blocked by: プロジェクトセットアップのみ
+- [ ] 🔒 定義ファイルの自動補完
+  - Blocked by: Phase 1 YAMLパーサー
+- [ ] 🔒 リアルタイムバリデーション
+  - Blocked by: Phase 1 Validator
+- [ ] 🔒 状態遷移図のプレビュー機能
+  - Blocked by: Phase 2 視覚化機能
+- [ ] 🔒 コード生成のショートカット
+  - Blocked by: Phase 1 CLI完成
+- [ ] 🔒 拡張機能のテスト
+  - Blocked by: 拡張機能の全機能実装
+- [ ] 🔒 VSCode Marketplaceへの公開
+  - Blocked by: 拡張機能テスト完了
 
-#### 開発ツール
-- [ ] ホットリロード機能
-- [ ] ファイルウォッチャーの実装
-- [ ] デバッグモードの実装
-- [ ] 開発サーバーの実装
+#### ⚡ 並列実行可能タスク
 
-#### 移行ツール
-- [ ] looplab/fsm → gofsm-gen 移行ツール
-- [ ] qmuntal/stateless → gofsm-gen 移行ツール
-- [ ] 移行ガイドの作成
-- [ ] 移行スクリプトの作成
+**gopls統合** (LSP調査は独立可能)
+- [ ] ⚡⏱️ LSP統合の調査
+- [ ] 🔒 型情報の提供
+  - Blocked by: Phase 1 基本実装
+- [ ] 🔒 定義へのジャンプ機能
+  - Blocked by: Phase 1 基本実装
+- [ ] 🔒 リファクタリングサポート
+  - Blocked by: Phase 1 基本実装
+
+**開発ツール** (独立実装可能)
+- [ ] ⚡ ホットリロード機能
+  - Blocked by: Phase 1 CLI完成のみ
+- [ ] ⚡ ファイルウォッチャーの実装
+- [ ] ⚡ デバッグモードの実装
+- [ ] ⚡ 開発サーバーの実装
+  - Blocked by: Phase 1 CLI完成のみ
+
+**移行ツール** (独立実装可能)
+- [ ] ⚡ looplab/fsm → gofsm-gen 移行ツール
+  - Blocked by: Phase 1 YAMLパーサーのみ
+- [ ] ⚡ qmuntal/stateless → gofsm-gen 移行ツール
+  - Blocked by: Phase 1 YAMLパーサーのみ
+- [ ] ⚡⏱️ 移行ガイドの作成
+- [ ] ⚡ 移行スクリプトの作成
+  - Blocked by: 移行ツール実装
 
 ### Phase 4: 高度な状態機械機能
 
-#### 階層的ステート
-- [ ] 親子状態モデルの実装
-- [ ] 複合状態のサポート
-- [ ] 初期子状態の実装
-- [ ] 状態の階層的遷移ロジック
-- [ ] 階層的状態のテスト
+#### 🎯 ブロッキングタスク
 
-#### ヒストリーステート
-- [ ] ShallowHistoryの実装
-- [ ] DeepHistoryの実装
-- [ ] ヒストリーステートのテスト
+**階層的ステート**
+- [ ] 🎯 親子状態モデルの実装
+  - Blocked by: Phase 1 内部モデル実装
+- [ ] 🔒 複合状態のサポート
+  - Blocked by: 親子状態モデル
+- [ ] 🔒 初期子状態の実装
+  - Blocked by: 親子状態モデル
+- [ ] 🔒 状態の階層的遷移ロジック
+  - Blocked by: 複合状態サポート
+- [ ] 🔒 階層的状態のテスト
+  - Blocked by: 階層的遷移ロジック
 
-#### パラレルステート
-- [ ] 並行状態モデルの設計
-- [ ] パラレル状態遷移の実装
-- [ ] 同期ポイントの実装
-- [ ] パラレルステートのテスト
+**ヒストリーステート**
+- [ ] 🎯 ShallowHistoryの実装
+  - Blocked by: 階層的ステート実装
+- [ ] 🔒 DeepHistoryの実装
+  - Blocked by: ShallowHistory実装
+- [ ] 🔒 ヒストリーステートのテスト
+  - Blocked by: History実装
 
-#### 内部遷移
-- [ ] InternalTransitionの実装
-- [ ] 内部遷移のテスト
+**パラレルステート**
+- [ ] 🎯 並行状態モデルの設計
+  - Blocked by: Phase 1 内部モデル実装
+- [ ] 🔒 パラレル状態遷移の実装
+  - Blocked by: 並行状態モデル
+- [ ] 🔒 同期ポイントの実装
+  - Blocked by: パラレル状態遷移
+- [ ] 🔒 パラレルステートのテスト
+  - Blocked by: パラレル状態実装
+
+**内部遷移**
+- [ ] ⚡ InternalTransitionの実装
+  - Blocked by: Phase 1 内部モデル実装のみ
+- [ ] 🔒 内部遷移のテスト
+  - Blocked by: InternalTransition実装
 
 ## 🔄 In Progress
 
