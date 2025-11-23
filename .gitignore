@@ -1,0 +1,114 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.out
+coverage.html
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# Build artifacts
+gofsm-gen
+/cmd/gofsm-gen/gofsm-gen
+
+# Generated code files
+*.gen.go
+*_test.gen.go
+*_mock.gen.go
+
+# Examples build output
+examples/**/*.gen.go
+examples/**/fsm.go
+
+# Benchmarking results
+benchmarks/*.txt
+benchmarks/*.prof
+*.bench
+*.cpu
+*.mem
+
+# IDE - VSCode
+.vscode/
+*.code-workspace
+
+# IDE - JetBrains
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# IDE - Vim
+*.swp
+*.swo
+*~
+
+# IDE - Emacs
+*~
+\#*\#
+.\#*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Documentation build artifacts
+docs/**/*.html
+docs/**/*.pdf
+
+# VSCode extension build artifacts
+tools/vscode-extension/out/
+tools/vscode-extension/node_modules/
+tools/vscode-extension/*.vsix
+
+# Configuration files with secrets
+.env
+.env.local
+*.secret
+secrets/
+
+# Test data
+testdata/tmp/
+testdata/output/
+
+# Cache directories
+.cache/
+tmp/
+
+# Debug files
+debug
+debug.test
+__debug_bin
+
+# Profiling data
+*.pprof
+cpu.prof
+mem.prof
