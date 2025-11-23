@@ -79,8 +79,8 @@ type {{.Name}}Actions struct {
 // {{.Name}}EntryActions contains all state entry actions
 type {{.Name}}EntryActions struct {
 {{- range .States}}
-{{- if .EntryAction}}
-	{{.EntryAction | title}} func(ctx context.Context, c *{{$.Name}}Context) error
+{{- if .Entry}}
+	{{.Entry | title}} func(ctx context.Context, c *{{$.Name}}Context) error
 {{- end}}
 {{- end}}
 }
@@ -88,8 +88,8 @@ type {{.Name}}EntryActions struct {
 // {{.Name}}ExitActions contains all state exit actions
 type {{.Name}}ExitActions struct {
 {{- range .States}}
-{{- if .ExitAction}}
-	{{.ExitAction | title}} func(ctx context.Context, c *{{$.Name}}Context) error
+{{- if .Exit}}
+	{{.Exit | title}} func(ctx context.Context, c *{{$.Name}}Context) error
 {{- end}}
 {{- end}}
 }
@@ -200,7 +200,7 @@ func (sm *{{.Name}}) Transition(ctx context.Context, event {{.Name}}Event) error
 		//exhaustive:enforce
 		switch event {
 		{{- range $transitions}}
-		case {{$.Name}}Event{{.Event | title}}:
+		case {{$.Name}}Event{{.On | title}}:
 			{{- $targetState := .To}}
 			{{- if .Guard}}
 			// Check guard condition
@@ -212,7 +212,7 @@ func (sm *{{.Name}}) Transition(ctx context.Context, event {{.Name}}Event) error
 			{{- $exitAction := ""}}
 			{{- range $.States}}
 				{{- if eq .Name $currentState}}
-					{{- $exitAction = .ExitAction}}
+					{{- $exitAction = .Exit}}
 				{{- end}}
 			{{- end}}
 			{{- if $exitAction}}
@@ -240,7 +240,7 @@ func (sm *{{.Name}}) Transition(ctx context.Context, event {{.Name}}Event) error
 			{{- $entryAction := ""}}
 			{{- range $.States}}
 				{{- if eq .Name $targetState}}
-					{{- $entryAction = .EntryAction}}
+					{{- $entryAction = .Entry}}
 				{{- end}}
 			{{- end}}
 			{{- if $entryAction}}
@@ -281,7 +281,7 @@ func (sm *{{.Name}}) PermittedEvents() []{{.Name}}Event {
 		{{- if $transitions}}
 		events = []{{$.Name}}Event{
 		{{- range $transitions}}
-			{{$.Name}}Event{{.Event | title}},
+			{{$.Name}}Event{{.On | title}},
 		{{- end}}
 		}
 		{{- end}}
@@ -307,7 +307,7 @@ func (sm *{{.Name}}) CanTransition(ctx context.Context, event {{.Name}}Event) bo
 		//exhaustive:enforce
 		switch event {
 		{{- range $transitions}}
-		case {{$.Name}}Event{{.Event | title}}:
+		case {{$.Name}}Event{{.On | title}}:
 			{{- if .Guard}}
 			// Check guard condition
 			if sm.guards.{{.Guard | title}} != nil {

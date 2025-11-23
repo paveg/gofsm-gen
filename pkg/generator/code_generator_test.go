@@ -9,29 +9,59 @@ import (
 	"github.com/yourusername/gofsm-gen/pkg/model"
 )
 
+// createOrderStateMachine creates a realistic order state machine model for testing
+func createOrderStateMachine(t *testing.T) *model.FSMModel {
+	t.Helper()
+
+	fsm, err := model.NewFSMModel("OrderStateMachine", "pending")
+	require.NoError(t, err)
+	fsm.Package = "orders"
+
+	// Add states
+	pending, _ := model.NewState("pending")
+	pending.EntryAction = "logEntry"
+	pending.ExitAction = "logExit"
+	fsm.AddState(pending)
+
+	approved, _ := model.NewState("approved")
+	fsm.AddState(approved)
+
+	rejected, _ := model.NewState("rejected")
+	fsm.AddState(rejected)
+
+	shipped, _ := model.NewState("shipped")
+	shipped.EntryAction = "notifyCustomer"
+	fsm.AddState(shipped)
+
+	// Add events
+	approve, _ := model.NewEvent("approve")
+	fsm.AddEvent(approve)
+
+	reject, _ := model.NewEvent("reject")
+	fsm.AddEvent(reject)
+
+	ship, _ := model.NewEvent("ship")
+	fsm.AddEvent(ship)
+
+	// Add transitions
+	t1, _ := model.NewTransition("pending", "approved", "approve")
+	t1.Guard = "hasPayment"
+	t1.Action = "chargeCard"
+	fsm.AddTransition(t1)
+
+	t2, _ := model.NewTransition("pending", "rejected", "reject")
+	t2.Action = "sendRejectionEmail"
+	fsm.AddTransition(t2)
+
+	t3, _ := model.NewTransition("approved", "shipped", "ship")
+	t3.Action = "notifyShipping"
+	fsm.AddTransition(t3)
+
+	return fsm
+}
+
 func TestCodeGenerator_Generate_OrderStateMachine(t *testing.T) {
-	// Create a realistic order state machine model
-	fsm := &model.FSMModel{
-		Name:    "OrderStateMachine",
-		Package: "orders",
-		Initial: "pending",
-		States: []model.State{
-			{Name: "pending", Entry: "logEntry", Exit: "logExit"},
-			{Name: "approved", Entry: "", Exit: ""},
-			{Name: "rejected", Entry: "", Exit: ""},
-			{Name: "shipped", Entry: "notifyCustomer", Exit: ""},
-		},
-		Events: []model.Event{
-			{Name: "approve"},
-			{Name: "reject"},
-			{Name: "ship"},
-		},
-		Transitions: []model.Transition{
-			{From: "pending", To: "approved", On: "approve", Guard: "hasPayment", Action: "chargeCard"},
-			{From: "pending", To: "rejected", On: "reject", Guard: "", Action: "sendRejectionEmail"},
-			{From: "approved", To: "shipped", On: "ship", Guard: "", Action: "notifyShipping"},
-		},
-	}
+	fsm := createOrderStateMachine(t)
 
 	gen, err := NewCodeGenerator()
 	require.NoError(t, err, "Failed to create code generator")
@@ -92,23 +122,27 @@ func TestCodeGenerator_Generate_OrderStateMachine(t *testing.T) {
 
 func TestCodeGenerator_Generate_SimpleDoorLock(t *testing.T) {
 	// Test with a simpler state machine without guards/actions
-	fsm := &model.FSMModel{
-		Name:    "DoorLock",
-		Package: "security",
-		Initial: "locked",
-		States: []model.State{
-			{Name: "locked", Entry: "", Exit: ""},
-			{Name: "unlocked", Entry: "", Exit: ""},
-		},
-		Events: []model.Event{
-			{Name: "lock"},
-			{Name: "unlock"},
-		},
-		Transitions: []model.Transition{
-			{From: "locked", To: "unlocked", On: "unlock", Guard: "", Action: ""},
-			{From: "unlocked", To: "locked", On: "lock", Guard: "", Action: ""},
-		},
-	}
+	fsm, err := model.NewFSMModel("DoorLock", "locked")
+	require.NoError(t, err)
+	fsm.Package = "security"
+
+	locked, _ := model.NewState("locked")
+	fsm.AddState(locked)
+
+	unlocked, _ := model.NewState("unlocked")
+	fsm.AddState(unlocked)
+
+	lockEvent, _ := model.NewEvent("lock")
+	fsm.AddEvent(lockEvent)
+
+	unlockEvent, _ := model.NewEvent("unlock")
+	fsm.AddEvent(unlockEvent)
+
+	t1, _ := model.NewTransition("locked", "unlocked", "unlock")
+	fsm.AddTransition(t1)
+
+	t2, _ := model.NewTransition("unlocked", "locked", "lock")
+	fsm.AddTransition(t2)
 
 	gen, err := NewCodeGenerator()
 	require.NoError(t, err)
@@ -140,16 +174,15 @@ func TestCodeGenerator_Generate_NilModel(t *testing.T) {
 
 func TestCodeGenerator_Generate_DefaultPackage(t *testing.T) {
 	// Test that package defaults to "main" if not specified
-	fsm := &model.FSMModel{
-		Name:    "TestMachine",
-		Package: "", // Empty package
-		Initial: "idle",
-		States: []model.State{
-			{Name: "idle", Entry: "", Exit: ""},
-		},
-		Events: []model.Event{},
-		Transitions: []model.Transition{},
-	}
+	fsm, err := model.NewFSMModel("TestMachine", "idle")
+	require.NoError(t, err)
+	// Don't set Package, should default to "main"
+
+	idle, _ := model.NewState("idle")
+	fsm.AddState(idle)
+
+	dummyEvent, _ := model.NewEvent("dummy")
+	fsm.AddEvent(dummyEvent)
 
 	gen, err := NewCodeGenerator()
 	require.NoError(t, err)
@@ -162,21 +195,21 @@ func TestCodeGenerator_Generate_DefaultPackage(t *testing.T) {
 }
 
 func TestCodeGenerator_GenerateTo(t *testing.T) {
-	fsm := &model.FSMModel{
-		Name:    "TestMachine",
-		Package: "test",
-		Initial: "start",
-		States: []model.State{
-			{Name: "start", Entry: "", Exit: ""},
-			{Name: "end", Entry: "", Exit: ""},
-		},
-		Events: []model.Event{
-			{Name: "proceed"},
-		},
-		Transitions: []model.Transition{
-			{From: "start", To: "end", On: "proceed", Guard: "", Action: ""},
-		},
-	}
+	fsm, err := model.NewFSMModel("TestMachine", "start")
+	require.NoError(t, err)
+	fsm.Package = "test"
+
+	start, _ := model.NewState("start")
+	fsm.AddState(start)
+
+	end, _ := model.NewState("end")
+	fsm.AddState(end)
+
+	proceed, _ := model.NewEvent("proceed")
+	fsm.AddEvent(proceed)
+
+	t1, _ := model.NewTransition("start", "end", "proceed")
+	fsm.AddTransition(t1)
 
 	gen, err := NewCodeGenerator()
 	require.NoError(t, err)
