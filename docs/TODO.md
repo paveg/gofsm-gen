@@ -2,6 +2,31 @@
 
 vibe-kanbanを使用した開発タスク管理ボードです。
 
+## 📈 プロジェクト進捗状況
+
+**最終更新**: 2025-11-23
+
+### 全体進捗
+- **Phase 1**: 🚧 進行中 (約40%完了)
+  - ✅ プロジェクト基盤: 完了
+  - ✅ 内部モデル実装: 完了
+  - ⏳ パーサー/ジェネレーター: 未着手
+- **Phase 2**: ⏸️ 未開始
+- **Phase 3**: ⏸️ 未開始
+- **Phase 4**: ⏸️ 未開始
+
+### 次のステップ
+Phase 1の内部モデル実装が完了したため、以下のタスクが**ブロック解除**されました：
+
+**すぐに着手可能なタスク**:
+1. 🎯 YAMLパーサーの実装 (pkg/parser/yaml.go)
+2. 🎯 コード生成器インターフェースの定義 (pkg/generator/generator.go)
+3. 🎯 Validator構造体の実装 (pkg/analyzer/validator.go)
+4. ⚡ state_machine.tmplテンプレートの作成
+5. ⚡ exhaustive統合の調査
+
+---
+
 ## 凡例
 
 - 🔒 **Blocked by**: このタスクは他のタスクに依存しています
@@ -18,23 +43,23 @@ vibe-kanbanを使用した開発タスク管理ボードです。
 #### 🎯 ブロッキングタスク（他のタスクの前提条件）
 
 **プロジェクトセットアップ**
-- [ ] 🎯 プロジェクト構造の初期化
-- [ ] 🎯 go.modファイルの作成
-- [ ] ⚡ CI/CDパイプラインの構築
-- [ ] ⚡ 開発環境のセットアップガイド作成
+- [x] 🎯 プロジェクト構造の初期化
+- [x] 🎯 go.modファイルの作成
+- [x] ⚡ CI/CDパイプラインの構築
+- [x] ⚡ 開発環境のセットアップガイド作成
 
 **内部モデル実装** (基盤となるデータ構造)
-- [ ] 🎯 FSMModel構造体の実装 (pkg/model/fsm.go)
-- [ ] 🎯 State構造体の実装 (pkg/model/state.go)
-- [ ] 🎯 Event構造体の実装 (pkg/model/event.go)
-- [ ] 🎯 Transition構造体の実装 (pkg/model/transition.go)
-- [ ] ⚡ StateGraph構造体の実装 (pkg/model/graph.go)
+- [x] 🎯 FSMModel構造体の実装 (pkg/model/fsm.go)
+- [x] 🎯 State構造体の実装 (pkg/model/state.go)
+- [x] 🎯 Event構造体の実装 (pkg/model/event.go)
+- [x] 🎯 Transition構造体の実装 (pkg/model/transition.go)
+- [x] ⚡ StateGraph構造体の実装 (pkg/model/graph.go)
 
 #### ⚡ 並列実行可能タスク（依存関係が少ない）
 
 **ドキュメント作成** (他の実装と並行可能)
-- [ ] ⚡⏱️ READMEの作成
-- [ ] ⚡⏱️ インストールガイドの作成
+- [x] ⚡⏱️ READMEの作成
+- [x] ⚡⏱️ インストールガイドの作成 (SETUP.md)
 - [ ] ⚡ 基本的な使い方ガイド
 - [ ] ⚡ YAML定義リファレンス
 - [ ] ⚡ API仕様書
@@ -306,18 +331,49 @@ vibe-kanbanを使用した開発タスク管理ボードです。
 
 ## ✅ Done
 
+### Phase 0: プロジェクト準備
 - [x] プロジェクト概要設計書の作成 (docs/overview-design.md)
 - [x] プロジェクト詳細設計書の作成 (docs/detailed-design.md)
 - [x] CLAUDE.md の作成
 - [x] TODO管理ボードの作成 (docs/TODO.md)
+- [x] TDD methodology and test quality guidelines の追加
+
+### Phase 1: 基本機能実装（進行中）
+
+#### ブロッキングタスク - 完了 ✓
+- [x] プロジェクト構造の初期化
+- [x] go.modファイルの作成
+- [x] CI/CDパイプラインの構築 (.github/workflows/ci.yml, .github/workflows/release.yml)
+- [x] 開発環境のセットアップガイド作成 (SETUP.md)
+- [x] FSMModel構造体の実装 (pkg/model/fsm.go + テスト)
+- [x] State構造体の実装 (pkg/model/state.go + テスト)
+- [x] Event構造体の実装 (pkg/model/event.go + テスト)
+- [x] Transition構造体の実装 (pkg/model/transition.go + テスト)
+- [x] StateGraph構造体の実装 (pkg/model/graph.go + テスト)
+
+#### 並列実行可能タスク - 完了 ✓
+- [x] READMEの作成
+- [x] インストールガイドの作成 (SETUP.md)
+- [x] Makefileの作成（ビルド自動化）
+- [x] golangci-lintの設定 (.golangci.yml)
+- [x] MITライセンスの追加 (LICENSE)
 
 ## 📊 マイルストーン
 
-### M1: Phase 1 完了 (基本機能)
-- YAML定義からの基本的なコード生成が動作
-- exhaustive統合による網羅性チェック
-- 基本的なCLIツールの完成
-- **目標日**: TBD
+### M1: Phase 1 完了 (基本機能) - 🚧 進行中 (約40%完了)
+**完了済み**:
+- ✅ プロジェクト基盤構築（構造、go.mod、CI/CD、ドキュメント）
+- ✅ 内部モデル実装（FSM, State, Event, Transition, Graph）
+
+**残作業**:
+- ⏳ YAMLパーサーの実装
+- ⏳ 基本コード生成器の実装
+- ⏳ 静的解析基盤（exhaustive統合）
+- ⏳ モデル検証器の実装
+- ⏳ CLI実装
+- ⏳ サンプルコード作成
+
+**目標日**: TBD
 
 ### M2: Phase 2 完了 (高度な機能)
 - ガード/アクション機能の完全実装
