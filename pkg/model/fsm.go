@@ -178,3 +178,39 @@ func (f *FSMModel) GetTransitionsTo(stateName string) []*Transition {
 	}
 	return transitions
 }
+
+// GetStateNames returns all state names (for template compatibility)
+func (f *FSMModel) GetStateNames() []string {
+	names := make([]string, 0, len(f.States))
+	for name := range f.States {
+		names = append(names, name)
+	}
+	return names
+}
+
+// GetEventNames returns all event names (for template compatibility)
+func (f *FSMModel) GetEventNames() []string {
+	names := make([]string, 0, len(f.Events))
+	for name := range f.Events {
+		names = append(names, name)
+	}
+	return names
+}
+
+// GetStatesSlice returns states as a slice (for template compatibility)
+func (f *FSMModel) GetStatesSlice() []*State {
+	states := make([]*State, 0, len(f.States))
+	for _, state := range f.States {
+		states = append(states, state)
+	}
+	return states
+}
+
+// GetEventsSlice returns events as a slice (for template compatibility)
+func (f *FSMModel) GetEventsSlice() []*Event {
+	events := make([]*Event, 0, len(f.Events))
+	for _, event := range f.Events {
+		events = append(events, event)
+	}
+	return events
+}
