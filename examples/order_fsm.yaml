@@ -1,0 +1,31 @@
+machine:
+  name: OrderStateMachine
+  initial: pending
+
+states:
+  - name: pending
+    entry: logEntry
+    exit: logExit
+  - name: approved
+  - name: rejected
+  - name: shipped
+
+events:
+  - approve
+  - reject
+  - ship
+
+transitions:
+  - from: pending
+    to: approved
+    on: approve
+    guard: hasPayment
+    action: chargeCard
+  - from: pending
+    to: rejected
+    on: reject
+    action: sendRejectionEmail
+  - from: approved
+    to: shipped
+    on: ship
+    action: notifyShipping
