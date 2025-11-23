@@ -451,3 +451,8 @@ Before submitting code, ensure:
 - [ ] Code coverage is >90% for new code
 - [ ] All tests pass: `go test ./...`
 - [ ] Static analysis passes: `go vet ./... && staticcheck ./...`
+
+## Documentation
+
+- All documentation files should be placed in the `docs/` directory.
+- Documentation filenames should be in `UPPERCASE_WITH_UNDERSCORES.md`.
