@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"text/template"
 
-	"github.com/yourusername/gofsm-gen/pkg/model"
+	"github.com/paveg/gofsm-gen/pkg/model"
 )
 
 // CodeGenerator generates Go code from FSM models
