@@ -15,8 +15,6 @@ linters:
     - ineffassign
     - staticcheck
     - unused
-    - gofmt
-    - goimports
     - misspell
     - unconvert
     - unparam
@@ -33,9 +31,6 @@ linters:
 
     govet:
       enable-all: true
-
-    goimports:
-      local-prefixes: github.com/paveg/gofsm-gen
 
     exhaustive:
       check:
@@ -93,14 +88,20 @@ linters:
         - wrapperFunc
         - yodaStyleExpr
 
+formatters:
+  enable:
+    - gofmt
+    - goimports
+
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/paveg/gofsm-gen
+
 issues:
-  max-per-linter: 0
+  max-issues-per-linter: 0
   max-same-issues: 0
-  exclude:
-    - path: _test\.go
-      linters:
-        - errcheck
-        - gosec
-    - path: cmd/
-      linters:
-        - gochecknoglobals
+  exclude-dirs:
+    - vendor
+  exclude-files:
+    - ".*\\.gen\\.go$"
