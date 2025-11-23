@@ -22,7 +22,7 @@ vendor/
 go.work
 
 # Build artifacts
-gofsm-gen
+/gofsm-gen
 /cmd/gofsm-gen/gofsm-gen
 
 # Generated code files
