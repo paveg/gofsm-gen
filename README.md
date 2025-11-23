@@ -1,17 +1,18 @@
 # gofsm-gen
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/yourusername/gofsm-gen.svg)](https://pkg.go.dev/github.com/yourusername/gofsm-gen)
-[![Go Report Card](https://goreportcard.com/badge/github.com/yourusername/gofsm-gen)](https://goreportcard.com/report/github.com/yourusername/gofsm-gen)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+A code generation-based state machine library for Go that provides **Rust-level exhaustiveness checking** for state transitions.
 
-A code generation-based finite state machine (FSM) library for Go that provides **Rust-level exhaustiveness checking** for state transitions.
+[![CI](https://github.com/yourusername/gofsm-gen/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/gofsm-gen/actions/workflows/ci.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/yourusername/gofsm-gen)](https://goreportcard.com/report/github.com/yourusername/gofsm-gen)
+[![codecov](https://codecov.io/gh/yourusername/gofsm-gen/branch/main/graph/badge.svg)](https://codecov.io/gh/yourusername/gofsm-gen)
+[![Go Reference](https://pkg.go.dev/badge/github.com/yourusername/gofsm-gen.svg)](https://pkg.go.dev/github.com/yourusername/gofsm-gen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Overview
 
-gofsm-gen generates type-safe state machine code from YAML or Go DSL definitions, combining the power of **code generation** with **static analysis** to ensure all state transitions are handled at compile time.
+gofsm-gen generates type-safe state machine code from YAML or Go DSL definitions, providing compile-time safety through code generation and static analysis using the `exhaustive` tool.
 
-### Key Features
-
+**Key Features:**
 - **Compile-time Safety**: Exhaustiveness checking ensures all state transitions are handled
 - **Type-safe**: Generated code uses strongly-typed enums for states and events
 - **Zero Runtime Overhead**: Minimal performance impact with <50ns per transition
@@ -29,12 +30,11 @@ gofsm-gen generates type-safe state machine code from YAML or Go DSL definitions
 go install github.com/yourusername/gofsm-gen/cmd/gofsm-gen@latest
 ```
 
-### Basic Example
+### Define Your State Machine
 
-1. Define your state machine in YAML:
+Create a YAML file (e.g., `order.yaml`):
 
 ```yaml
-# order.yaml
 machine:
   name: OrderStateMachine
   initial: pending
@@ -54,21 +54,24 @@ transitions:
   - from: pending
     to: approved
     on: approve
+    guard: hasPayment
+    action: chargeCard
   - from: pending
     to: rejected
     on: reject
   - from: approved
     to: shipped
     on: ship
+    action: notifyShipping
 ```
 
-2. Generate the state machine code:
+### Generate Code
 
 ```bash
 gofsm-gen -spec=order.yaml -out=order_fsm.gen.go
 ```
 
-3. Use the generated code in your application:
+### Use the Generated State Machine
 
 ```go
 package main
@@ -79,15 +82,30 @@ import (
 )
 
 func main() {
-    // Create state machine with guards and actions
-    sm := NewOrderStateMachine(
-        OrderGuards{},
-        OrderActions{},
-    )
+    // Define guards
+    guards := OrderGuards{
+        HasPayment: func(ctx context.Context, c *OrderContext) bool {
+            return c.PaymentMethod != ""
+        },
+    }
 
-    ctx := context.Background()
+    // Define actions
+    actions := OrderActions{
+        ChargeCard: func(ctx context.Context, from, to OrderState, c *OrderContext) error {
+            log.Printf("Charging card for order %s", c.OrderID)
+            return nil
+        },
+        NotifyShipping: func(ctx context.Context, from, to OrderState, c *OrderContext) error {
+            log.Printf("Notifying shipping for order %s", c.OrderID)
+            return nil
+        },
+    }
+
+    // Create state machine
+    sm := NewOrderStateMachine(guards, actions)
 
     // Trigger transitions
+    ctx := context.Background()
     if err := sm.Transition(ctx, OrderEventApprove); err != nil {
         log.Fatal(err)
     }
@@ -103,14 +121,39 @@ func main() {
 
 ## Why gofsm-gen?
 
-Traditional state machine libraries in Go rely on runtime validation, which can lead to:
+### Problem: Runtime State Machine Errors
 
+Traditional state machine libraries in Go check validity at runtime:
+
+```go
+// Runtime error - only discovered when this code path executes
+sm.Transition("invalid-event") // Error: invalid transition
+```
+
+Issues with runtime validation:
 - Runtime panics from invalid transitions
 - Incomplete event handling going unnoticed
 - Difficulty maintaining large state machines
 - No compile-time guarantees
 
-gofsm-gen solves these problems by generating type-safe code with exhaustiveness checking, similar to Rust's enum pattern matching. The `exhaustive` static analyzer ensures all states and events are handled at compile time.
+### Solution: Compile-Time Safety
+
+gofsm-gen generates code with exhaustive switch statements:
+
+```go
+// Compiler error if any case is missing
+switch event {
+case OrderEventApprove:
+    // Handle approve
+case OrderEventReject:
+    // Handle reject
+case OrderEventShip:
+    // Handle ship
+// Compiler enforces all cases are handled
+}
+```
+
+The generated code includes `//exhaustive:enforce` annotations that the static analyzer validates, ensuring all states and events are properly handled at compile time.
 
 ## Core Concepts
 
@@ -170,7 +213,7 @@ actions := OrderActions{
 }
 ```
 
-## Advanced Features
+## Features in Detail
 
 ### Entry and Exit Actions
 
@@ -183,24 +226,30 @@ states:
     exit: cleanupTemporaryData
 ```
 
-### Conditional Transitions
+### Static Analysis
 
-Use guards to implement complex business logic:
+The generator performs comprehensive validation:
 
-```yaml
-transitions:
-  - from: pending
-    to: approved
-    on: approve
-    guard: hasPayment && hasInventory
-```
+- **Reachability Analysis**: Ensures all states are reachable from the initial state
+- **Determinism Checking**: Detects conflicting unguarded transitions
+- **Completeness Validation**: Verifies all referenced states and events are defined
+- **Guard Conflict Detection**: Warns if multiple guards could be true simultaneously
 
 ### Visualization
 
-Generate diagrams to visualize your state machine:
+Generate state machine diagrams:
 
 ```bash
-gofsm-gen -spec=order.yaml -visualize=mermaid -out=diagram.md
+gofsm-gen -spec=fsm.yaml -visualize=mermaid
+```
+
+Output:
+```mermaid
+stateDiagram-v2
+    [*] --> pending
+    pending --> approved: approve
+    pending --> rejected: reject
+    approved --> shipped: ship
 ```
 
 ### Test Generation
@@ -222,29 +271,14 @@ gofsm-gen is designed for high-performance applications:
 
 See [benchmarks/](benchmarks/) for detailed performance metrics.
 
-## Project Status
-
-gofsm-gen is under active development. Current phase:
-
-**Phase 1** (In Progress):
-- [x] YAML parser
-- [x] Basic code generation
-- [x] Exhaustive analysis integration
-- [ ] Complete test coverage
-- [ ] Documentation
-
-**Upcoming Phases**:
-- Phase 2: Guards/actions + Go DSL support
-- Phase 3: VSCode extension + enhanced tooling
-- Phase 4: Hierarchical state machines + history states
-
 ## Documentation
 
-- [Installation Guide](docs/installation.md)
-- [Basic Usage Guide](docs/usage.md)
-- [YAML Definition Reference](docs/yaml-reference.md)
-- [API Documentation](docs/api.md)
-- [Contributing Guide](CONTRIBUTING.md)
+- [Installation Guide](docs/installation.md) - Detailed installation instructions
+- [Basic Usage Guide](docs/usage.md) - Getting started with gofsm-gen
+- [YAML Definition Reference](docs/yaml-reference.md) - Complete YAML syntax reference
+- [API Documentation](docs/api.md) - Generated code API reference
+- [Setup Guide](SETUP.md) - Development environment setup
+- [CLAUDE.md](CLAUDE.md) - Project guidelines and architecture
 
 ## Examples
 
@@ -255,14 +289,64 @@ Explore complete examples in the [examples/](examples/) directory:
 - **Traffic Light**: Simple cyclic state machine
 - **Game Character**: RPG character state management
 
+## Development
+
+### Prerequisites
+
+- Go 1.23 or later
+- golangci-lint (for linting)
+- make (optional)
+
+### Building
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/gofsm-gen.git
+cd gofsm-gen
+
+# Install dependencies
+go mod download
+
+# Build
+make build
+
+# Run tests
+make test
+
+# Run all checks
+make all
+```
+
+See [SETUP.md](SETUP.md) for detailed development environment setup.
+
 ## Contributing
 
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on:
+We welcome contributions! This project follows Test-Driven Development (TDD):
 
+1. Write tests first
+2. Implement minimum code to pass
+3. Refactor while keeping tests green
+
+Please read our [Contributing Guide](CONTRIBUTING.md) for details on:
 - Setting up the development environment
 - Running tests (we use TDD!)
 - Code style guidelines
 - Submitting pull requests
+
+Please ensure:
+- All tests pass (`make test`)
+- Code is formatted (`make fmt`)
+- Linting passes (`make lint`)
+- Coverage remains >90%
+
+## Roadmap
+
+- **Phase 1**: YAML definitions + basic code generation + exhaustive integration
+- **Phase 2**: Guards/actions + Go DSL support
+- **Phase 3**: VSCode extension + enhanced tooling
+- **Phase 4**: Hierarchical state machines + history states
+
+See [TODO.md](docs/TODO.md) for detailed task tracking.
 
 ## License
 
@@ -271,7 +355,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 ## Acknowledgments
 
 Inspired by:
-- Rust's exhaustive pattern matching
+- Rust's exhaustive pattern matching and enum handling
 - [Stateless](https://github.com/dotnet-state-machine/stateless) for .NET
 - [XState](https://github.com/statelyai/xstate) for JavaScript
 
@@ -279,4 +363,4 @@ Inspired by:
 
 - Report issues: [GitHub Issues](https://github.com/yourusername/gofsm-gen/issues)
 - Discussions: [GitHub Discussions](https://github.com/yourusername/gofsm-gen/discussions)
-- Documentation: [pkg.go.dev](https://pkg.go.dev/github.com/yourusername/gofsm-gen)
+- API Documentation: [pkg.go.dev](https://pkg.go.dev/github.com/yourusername/gofsm-gen)
