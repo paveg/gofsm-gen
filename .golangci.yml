@@ -1,5 +1,6 @@
 run:
   timeout: 5m
+  tests: true
   modules-download-mode: readonly
 
 linters:
@@ -30,7 +31,7 @@ linters-settings:
     enable-all: true
 
   goimports:
-    local-prefixes: github.com/yourusername/gofsm-gen
+    local-prefixes: github.com/paveg/gofsm-gen
 
   exhaustive:
     check:
