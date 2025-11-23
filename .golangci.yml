@@ -1,6 +1,15 @@
+# golangci-lint v2 configuration
+# Documentation: https://golangci-lint.run/docs/configuration/
+version: "2"
+
 run:
   timeout: 5m
+  tests: true
   modules-download-mode: readonly
+  skip-dirs:
+    - vendor
+  skip-files:
+    - ".*\\.gen\\.go$"
 
 linters:
   enable:
@@ -10,8 +19,6 @@ linters:
     - ineffassign
     - staticcheck
     - unused
-    - gofmt
-    - goimports
     - misspell
     - unconvert
     - unparam
@@ -21,87 +28,80 @@ linters:
     - gosec
     - exhaustive
 
-linters-settings:
-  errcheck:
-    check-type-assertions: true
-    check-blank: true
+  settings:
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
 
-  govet:
-    enable-all: true
+    govet:
+      enable-all: true
 
-  goimports:
-    local-prefixes: github.com/yourusername/gofsm-gen
+    exhaustive:
+      check:
+        - switch
+        - map
+      default-signifies-exhaustive: false
+      ignore-enum-members: ""
+      package-scope-only: false
 
-  exhaustive:
-    check:
-      - switch
-      - map
-    default-signifies-exhaustive: false
-    ignore-enum-members: ""
-    package-scope-only: false
+    revive:
+      rules:
+        - name: exported
+          severity: warning
+        - name: var-naming
+          severity: warning
+        - name: indent-error-flow
+          severity: warning
 
-  revive:
-    rules:
-      - name: exported
-        severity: warning
-      - name: var-naming
-        severity: warning
-      - name: indent-error-flow
-        severity: warning
+    gocritic:
+      enabled-checks:
+        - appendAssign
+        - assignOp
+        - boolExprSimplify
+        - captLocal
+        - commentFormatting
+        - commentedOutCode
+        - defaultCaseOrder
+        - dupArg
+        - dupBranchBody
+        - dupCase
+        - dupSubExpr
+        - elseif
+        - emptyFallthrough
+        - emptyStringTest
+        - equalFold
+        - flagDeref
+        - ifElseChain
+        - indexAlloc
+        - methodExprCall
+        - nilValReturn
+        - rangeExprCopy
+        - rangeValCopy
+        - regexpMust
+        - singleCaseSwitch
+        - sloppyLen
+        - stringXbytes
+        - switchTrue
+        - typeAssertChain
+        - typeSwitchVar
+        - underef
+        - unlambda
+        - unslice
+        - valSwap
+        - weakCond
+        - wrapperFunc
+        - yodaStyleExpr
 
-  gocritic:
-    enabled-checks:
-      - appendAssign
-      - assignOp
-      - boolExprSimplify
-      - captLocal
-      - commentFormatting
-      - commentedOutCode
-      - defaultCaseOrder
-      - dupArg
-      - dupBranchBody
-      - dupCase
-      - dupSubExpr
-      - elseif
-      - emptyFallthrough
-      - emptyStringTest
-      - equalFold
-      - flagDeref
-      - ifElseChain
-      - indexAlloc
-      - methodExprCall
-      - nilValReturn
-      - rangeExprCopy
-      - rangeValCopy
-      - regexpMust
-      - singleCaseSwitch
-      - sloppyLen
-      - stringXbytes
-      - switchTrue
-      - typeAssertChain
-      - typeSwitchVar
-      - underef
-      - unlambda
-      - unslice
-      - valSwap
-      - weakCond
-      - wrapperFunc
-      - yodaStyleExpr
+formatters:
+  enable:
+    - gofmt
+    - goimports
+
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/paveg/gofsm-gen
 
 issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - errcheck
-        - gosec
-    - path: cmd/
-      linters:
-        - gochecknoglobals
-
   max-issues-per-linter: 0
   max-same-issues: 0
-
-output:
-  format: colored-line-number
-  print-issued-lines: true
-  print-linter-name: true

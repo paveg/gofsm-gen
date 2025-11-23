@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/yourusername/gofsm-gen/pkg/model"
+	"github.com/paveg/gofsm-gen/pkg/model"
 )
 
 // createOrderStateMachine creates a realistic order state machine model for testing

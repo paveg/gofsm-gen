@@ -41,13 +41,23 @@ This guide will help you set up your development environment for contributing to
 
 ### Recommended Tools
 
-1. **golangci-lint** (for linting)
+1. **golangci-lint v2.x** (for linting - **REQUIRED: v2.x, DO NOT use v1.x**)
    ```bash
-   # macOS/Linux
-   curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+   # IMPORTANT: This project requires golangci-lint v2.x
+   # DO NOT install or use v1.x versions
 
-   # Windows
-   go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+   # Install v2.x (recommended method)
+   # Visit: https://golangci-lint.run/welcome/install/
+
+   # macOS/Linux (using binary installation)
+   curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.0.0
+
+   # Or install latest v2.x
+   go install github.com/golangci/golangci-lint/cmd/golangci-lint@v2
+
+   # Verify v2.x is installed
+   golangci-lint version
+   # Should output: golangci-lint has version 2.x.x
    ```
 
 2. **staticcheck** (additional static analysis)
